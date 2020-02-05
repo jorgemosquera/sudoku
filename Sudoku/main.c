@@ -7,10 +7,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define MAX_NUM 9
 
 void printSudoku(int *sudoku[]);
+void shuffle(int* ptr, int length);
 
 /*
  * 
@@ -108,5 +110,23 @@ void printSudoku(int *sudoku[]){
             }
             printf("\n");
     }
+    }
+}
+
+void shuffle(int* ptr, int length){
+    
+/*
+ * Given a array, shuffle the elements. 
+*/
+    
+    // takes the seed from the clock.
+    srand((unsigned int)(time(NULL)));
+    int pos;
+    int temp;
+    for(int i = 0; i < length; i++){
+        pos = rand()% length;
+        temp = ptr[pos];
+        ptr[pos] = ptr[i];
+        ptr[i] = temp;
     }
 }
