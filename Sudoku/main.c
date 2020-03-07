@@ -13,6 +13,8 @@
 
 void printSudoku(int *sudoku[]);
 void shuffle(int* ptr, int length);
+int hasUniqueNumbers(int* ptr, int lenght);
+
 
 /*
  * 
@@ -53,8 +55,11 @@ int main() {
     sudoku[7] = zone8;
     sudoku[8] = zone9;
     
+    int test[MAX_NUM] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    shuffle(test, MAX_NUM);
+    printf("The array is unique: %s",hasUniqueNumbers(test, MAX_NUM)?"TRUE":"FALSE");
     
-    printSudoku(sudoku);
+//    printSudoku(sudoku);
 
     return (0);
 }
@@ -129,4 +134,21 @@ void shuffle(int* ptr, int length){
         ptr[pos] = ptr[i];
         ptr[i] = temp;
     }
+}
+
+int hasUniqueNumbers(int* ptr, int lenght){
+/*
+ * Given a array, verify if it has unique elements.
+ * Return 1 if is unique 0 if not.  
+*/
+    int numbers[MAX_NUM] = {0};
+    for (int i = 0; i < MAX_NUM; i++){
+        numbers[ptr[i]]++;
+    }
+    for(int i = 0; i < MAX_NUM; i++){
+        if(numbers[i]>1){
+            return 0;          
+        }
+    }
+    return 1;
 }
