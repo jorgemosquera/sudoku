@@ -14,6 +14,8 @@
 void printSudoku(int *sudoku[]);
 void shuffle(int* ptr, int length);
 int hasUniqueNumbers(int* ptr, int lenght);
+void getRow(int* rowResult, int** sudoku, int rowNumber);
+int* getColumn(int* sudoku, int column);
 
 
 /*
@@ -54,12 +56,28 @@ int main() {
     sudoku[6] = zone7;
     sudoku[7] = zone8;
     sudoku[8] = zone9;
+//=============================================================================== 
     
-    int test[MAX_NUM] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-    shuffle(test, MAX_NUM);
-    printf("The array is unique: %s",hasUniqueNumbers(test, MAX_NUM)?"TRUE":"FALSE");
+//    int test[MAX_NUM] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+//    shuffle(test, MAX_NUM);
+//    printf("The array is unique: %s",hasUniqueNumbers(test, MAX_NUM)?"TRUE":"FALSE");
     
-//    printSudoku(sudoku);
+    printSudoku(sudoku);
+    
+//    ===========================================================================
+    
+    int* row = malloc(sizeof(int)*MAX_NUM);
+    if(row == NULL){
+        printf("There was a problem creating the row. GoodBye.");
+        exit;       
+    }
+    
+    getRow(row,sudoku,8);
+    
+    for(int i = 0; i< MAX_NUM; i++){
+        printf("%d ",row[i]);
+    }
+    
 
     return (0);
 }
@@ -151,4 +169,18 @@ int hasUniqueNumbers(int* ptr, int lenght){
         }
     }
     return 1;
+}
+
+void getRow(int* row, int** sudoku, int rowNumber){
+/*
+ * Given a sudoku and a row number, modify an array of with the numbers of 
+ * the specified row.
+*/
+    int shiftZone = (rowNumber/3)*3;
+    int shiftIndex =  3*(rowNumber%3);
+    // i controls the position of the result row
+    for(int i = 0; i < MAX_NUM; i++){
+        row[i] = sudoku[i/3+ shiftZone][i%3+ shiftIndex];
+    }    
+    
 }
