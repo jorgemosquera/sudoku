@@ -19,7 +19,12 @@ void getColumn(int* columnResult, int** sudoku, int columnNumber);
 
 void shuffleSudoku(int** sudoku);
 void createSudoku(int** sudoku);
+void createSudoku2(int** sudoku);
 int correctSudoku(int** sudoku);
+void checkNumbersAvailable(int* line, int** sudoku, int zone);
+int quantityNumbersAvailable(int* line);
+void printAvailableNumbers(int** sudoku, int zone);
+int pickAvailableNumber(int** sudoku, int zone);
 
 
 /*
@@ -28,6 +33,31 @@ int correctSudoku(int** sudoku);
 int main() {
     
     srand((unsigned int)(time(NULL)));
+    
+    //this is a new sudoko
+    
+    int* newSudoku[9];
+    
+    int nzone1[MAX_NUM] = {0};
+    int nzone2[MAX_NUM] = {0};
+    int nzone3[MAX_NUM] = {0};
+    int nzone4[MAX_NUM] = {0};
+    int nzone5[MAX_NUM] = {0};
+    int nzone6[MAX_NUM] = {0};
+    int nzone7[MAX_NUM] = {0};
+    int nzone8[MAX_NUM] = {0};
+    int nzone9[MAX_NUM] = {0};
+    
+    newSudoku[0] = nzone1;
+    newSudoku[1] = nzone2;
+    newSudoku[2] = nzone3;
+    newSudoku[3] = nzone4;
+    newSudoku[4] = nzone5;
+    newSudoku[5] = nzone6;
+    newSudoku[6] = nzone7;
+    newSudoku[7] = nzone8;
+    newSudoku[8] = nzone9;
+    
     
     //this is a correct Sudoku Example
     
@@ -88,7 +118,15 @@ int main() {
     sudoku[7] = zone8;
     sudoku[8] = zone9;
     
-     
+// Testing available numbers of a sudoku:
+    
+//    printAvailableNumbers(sudoku, 0);
+//    printf("\nthe selected number is: %d", pickAvailableNumber(sudoku, 0));
+    
+    
+// Testing has unique Numbers
+//    int test[MAX_NUM] = {0, 0, 3, 4, 5, 6, 7, 8, 9};
+//    printf("the test has unique values: %s", hasUniqueNumbers(test)?"TRUE":"FALSE");
     
 //=============================================================================== 
     
@@ -137,12 +175,20 @@ int main() {
 
 //    ===========================================================================
     
-    printf("Is a correct Sudoku ? %s",correctSudoku(sudoku)?"YES":"NO");
+//    printf("Is a correct Sudoku ? %s",correctSudoku(sudoku)?"YES":"NO");
+    
+// ==========================================================
+    
+    createSudoku2(newSudoku);
+    
+    
+        
+
     
     return (0);
 }
 
-void printSudoku(int *sudoku[]){
+void printSudoku(int **sudoku){
     
 /*
 0 1 2 3 4  5  6  7 8  9 10 11 12
@@ -197,11 +243,13 @@ void printSudoku(int *sudoku[]){
     }
 }
 
-void shuffle(int* ptr){
-    
+
+
 /*
  * Given a array, shuffle the elements. 
-*/  
+*/ 
+void shuffle(int* ptr){
+    
     int pos;
     int temp;
     for(int i = 0; i < MAX_NUM; i++){
@@ -212,14 +260,19 @@ void shuffle(int* ptr){
     }
 }
 
-int hasUniqueNumbers(int* ptr){
+
 /*
  * Given a array, verify if it has unique elements.
  * Return 1 if is unique 0 if not.  
 */
+int hasUniqueNumbers(int* ptr){
+
     int numbers[MAX_NUM] = {0};
     for (int i = 0; i < MAX_NUM; i++){
-        numbers[ptr[i]]++;
+        // In order to allow for null values. 0 will be skipped.
+        if(ptr[i]!=0){
+            numbers[ptr[i]-1]++;
+        }
     }
     for(int i = 0; i < MAX_NUM; i++){
         if(numbers[i]>1){
@@ -229,11 +282,13 @@ int hasUniqueNumbers(int* ptr){
     return 1;
 }
 
-void getRow(int* row, int** sudoku, int rowNumber){
+
 /*
  * Given a sudoku and a row number, modify an array of with the numbers of 
  * the specified row.
 */
+void getRow(int* row, int** sudoku, int rowNumber){
+
     int shiftZone = (rowNumber/3)*3;
     int shiftIndex =  3*(rowNumber%3);
     // i controls the position of the result row
@@ -242,11 +297,12 @@ void getRow(int* row, int** sudoku, int rowNumber){
     }    
 }
 
-void getColumn(int* column, int** sudoku, int columnNumber){
 /*
  * Given a sudoku and a column number, modify an array with the numbers of 
  * the specified column.
 */
+void getColumn(int* column, int** sudoku, int columnNumber){
+
     int shiftZone = (columnNumber/3);
     int shiftIndex =  (columnNumber%3);
     // i controls the position of the result row
@@ -256,6 +312,7 @@ void getColumn(int* column, int** sudoku, int columnNumber){
 }
 
 void printLine(int* line){
+    printf("\nThe values of the line are:\n");
     for(int i = 0; i< MAX_NUM; i++){
         printf("%d ",line[i]);
     }
@@ -316,17 +373,8 @@ void createSudoku(int** sudoku){
 int correctSudoku(int** sudoku){
     int result = 1;
     
-    int* row = malloc(sizeof(int)*MAX_NUM);
-    if(row == NULL){
-        printf("There was a problem creating the row. GoodBye.");
-        exit;       
-    }
-    
-    int* column = malloc(sizeof(int)*MAX_NUM);
-    if(column == NULL){
-        printf("There was a problem creating the row. GoodBye.");
-        exit;       
-    }
+    int row[MAX_NUM];
+    int column[MAX_NUM];
     
     // First lets check if the zones are correct
     for(int i =0; i < MAX_NUM; i++){
@@ -354,8 +402,96 @@ int correctSudoku(int** sudoku){
         }
     }
     
-    free(row);
-    free(column);
-    
     return result;
+}
+
+/*
+ * Given a array, return a list with the available numbers.
+ * Return 0 if is available 1 if not.  
+*/
+void checkNumbersAvailable(int* line, int** sudoku, int zone){
+
+    for (int i = 0; i < MAX_NUM; i++){
+        // In order to allow for null values. 0 will be skipped.
+        if(sudoku[zone][i]!=0){
+            line[sudoku[zone][i]-1]++;
+        }
+    }
+}
+
+int quantityNumbersAvailable(int* temp){
+    int result = 0;
+    for (int i = 0; i < MAX_NUM; i++){
+        if(!temp[i]){
+            result++;
+        }
+    }
+    printf("\nthe quantity of numbers available is: %d", result);
+    return result;
+}
+
+void printAvailableNumbers(int** sudoku, int zone){
+    
+    int* tempLine = malloc(sizeof(int)*MAX_NUM);
+    if(tempLine == NULL){
+        printf("There was a problem creating the row. GoodBye.");
+        exit;       
+    }
+    
+    checkNumbersAvailable(tempLine, sudoku, zone);
+    
+    for(int i = 0; i < MAX_NUM; i++){
+        if(tempLine[i]!=1){
+            printf("%d ", i+1);
+        }
+    }
+    
+    free(tempLine);
+}
+
+int pickAvailableNumber(int** sudoku, int zone){
+    
+    int pos = 0;
+    int tempLine[MAX_NUM] = {0};
+    
+    checkNumbersAvailable(tempLine, sudoku, zone);
+    printLine(tempLine);
+    int quantity = quantityNumbersAvailable(tempLine);
+   
+    if(quantity> 0){
+    
+        do {
+        pos = rand()% MAX_NUM;
+    //    printf("\nThe position is: %d",pos);
+    //    printf("\nthe value of %d is %d",pos+1,tempLine[pos]);
+    //    printf("\nThe number %d is %s available",pos+1,tempLine[pos]?"not":"");
+
+        } while(tempLine[pos]);
+        pos = pos + 1;
+    }
+    printf("\nThe number picked is: %d",pos);
+//    free(tempLine);
+    
+    return pos;
+}
+
+void createSudoku2(int** sudoku){
+    int zone;
+    int index;
+    for (int i = 0; i < MAX_NUM; i++){ // rows
+        for (int j = 0; j < MAX_NUM; j++){ // columns
+            zone = (i/3)*3 + j/3;
+            index = (i%3)*3 + j%3;
+//            printf("%d %d\n",zone,index);
+
+            do {
+                sudoku[zone][index] = pickAvailableNumber(sudoku,zone);
+            }
+            while(!correctSudoku(sudoku));
+            
+            printSudoku(sudoku);
+        }
+        
+    }
+    
 }
