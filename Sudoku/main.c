@@ -10,12 +10,12 @@
 #include <time.h>
 
 #define MAX_NUM 9
-
+void printLine(int* line);
 void printSudoku(int *sudoku[]);
 void shuffle(int* ptr, int length);
 int hasUniqueNumbers(int* ptr, int lenght);
 void getRow(int* rowResult, int** sudoku, int rowNumber);
-int* getColumn(int* sudoku, int column);
+void getColumn(int* columnResult, int** sudoku, int columnNumber);
 
 
 /*
@@ -65,19 +65,28 @@ int main() {
     printSudoku(sudoku);
     
 //    ===========================================================================
-    
+//  Testing getRow    
     int* row = malloc(sizeof(int)*MAX_NUM);
     if(row == NULL){
         printf("There was a problem creating the row. GoodBye.");
         exit;       
     }
     
-    getRow(row,sudoku,8);
+//    getRow(row,sudoku,8);
     
-    for(int i = 0; i< MAX_NUM; i++){
-        printf("%d ",row[i]);
+    
+
+    //    ===========================================================================
+//  Testing getColumn
+    
+    int* column = malloc(sizeof(int)*MAX_NUM);
+    if(column == NULL){
+        printf("There was a problem creating the row. GoodBye.");
+        exit;       
     }
     
+    getColumn(column,sudoku,8);
+    printLine(column);
 
     return (0);
 }
@@ -182,5 +191,23 @@ void getRow(int* row, int** sudoku, int rowNumber){
     for(int i = 0; i < MAX_NUM; i++){
         row[i] = sudoku[i/3+ shiftZone][i%3+ shiftIndex];
     }    
-    
+}
+
+void getColumn(int* column, int** sudoku, int columnNumber){
+/*
+ * Given a sudoku and a column number, modify an array with the numbers of 
+ * the specified column.
+*/
+    int shiftZone = (columnNumber/3);
+    int shiftIndex =  (columnNumber%3);
+    // i controls the position of the result row
+    for(int i = 0; i < MAX_NUM; i++){
+        column[i] = sudoku[((i/3)*3)+shiftZone][((i%3)*3)+shiftIndex];
+    }
+}
+
+void printLine(int* line){
+    for(int i = 0; i< MAX_NUM; i++){
+        printf("%d ",line[i]);
+    }
 }
