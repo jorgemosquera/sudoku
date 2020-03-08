@@ -11,11 +11,15 @@
 
 #define MAX_NUM 9
 void printLine(int* line);
-void printSudoku(int *sudoku[]);
-void shuffle(int* ptr, int length);
-int hasUniqueNumbers(int* ptr, int lenght);
+void printSudoku(int** sudoku);
+void shuffle(int* zone);
+int hasUniqueNumbers(int* ptr);
 void getRow(int* rowResult, int** sudoku, int rowNumber);
 void getColumn(int* columnResult, int** sudoku, int columnNumber);
+
+void shuffleSudoku(int** sudoku);
+void createSudoku(int** sudoku);
+int correctSudoku(int** sudoku);
 
 
 /*
@@ -23,7 +27,34 @@ void getColumn(int* columnResult, int** sudoku, int columnNumber);
  */
 int main() {
     
-    int numbers[MAX_NUM];
+    srand((unsigned int)(time(NULL)));
+    
+    //this is a correct Sudoku Example
+    
+    int* goodSudoku[9]; 
+    
+     
+    int xzone1[MAX_NUM] = {9, 7, 8, 2, 5, 1, 4, 3, 6};
+    int xzone2[MAX_NUM] = {1, 6, 4, 7, 3, 8, 5, 2, 9};
+    int xzone3[MAX_NUM] = {5, 3, 2, 9, 4, 6, 1, 8, 7};
+    int xzone4[MAX_NUM] = {7, 4, 5, 6, 9, 3, 1, 8, 2};
+    int xzone5[MAX_NUM] = {2, 9, 3, 8, 1, 5, 6, 4, 7};
+    int xzone6[MAX_NUM] = {6, 1, 8, 7, 2, 4, 3, 9, 5};
+    int xzone7[MAX_NUM] = {8, 6, 4, 3, 2, 9, 5, 1, 7};
+    int xzone8[MAX_NUM] = {3, 5, 1, 4, 7, 6, 9, 8, 2};
+    int xzone9[MAX_NUM] = {2, 7, 9, 8, 5, 1, 4, 6, 3};
+    
+    goodSudoku[0] = xzone1;
+    goodSudoku[1] = xzone2;
+    goodSudoku[2] = xzone3;
+    goodSudoku[3] = xzone4;
+    goodSudoku[4] = xzone5;
+    goodSudoku[5] = xzone6;
+    goodSudoku[6] = xzone7;
+    goodSudoku[7] = xzone8;
+    goodSudoku[8] = xzone9;
+    
+                         
 /*
     int zone1[MAX_NUM] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
     int zone2[MAX_NUM] = {11, 12, 13, 14, 15, 16, 17, 18, 19};
@@ -34,7 +65,8 @@ int main() {
     int zone7[MAX_NUM] = {61, 62, 63, 64, 65, 66, 67, 68, 69};
     int zone8[MAX_NUM] = {71, 72, 73, 74, 75, 76, 77, 78, 79};
     int zone9[MAX_NUM] = {81, 82, 83, 84, 85, 86, 87, 88, 89};
-*/
+*/    
+    int *sudoku[9]; 
     
     int zone1[MAX_NUM] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
     int zone2[MAX_NUM] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
@@ -46,7 +78,6 @@ int main() {
     int zone8[MAX_NUM] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
     int zone9[MAX_NUM] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
     
-    int *sudoku[9];
     sudoku[0] = zone1;
     sudoku[1] = zone2;
     sudoku[2] = zone3;
@@ -56,16 +87,20 @@ int main() {
     sudoku[6] = zone7;
     sudoku[7] = zone8;
     sudoku[8] = zone9;
+    
+     
+    
 //=============================================================================== 
     
 //    int test[MAX_NUM] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 //    shuffle(test, MAX_NUM);
 //    printf("The array is unique: %s",hasUniqueNumbers(test, MAX_NUM)?"TRUE":"FALSE");
     
-    printSudoku(sudoku);
+//    printSudoku(sudoku);
     
 //    ===========================================================================
 //  Testing getRow    
+    /*
     int* row = malloc(sizeof(int)*MAX_NUM);
     if(row == NULL){
         printf("There was a problem creating the row. GoodBye.");
@@ -74,20 +109,36 @@ int main() {
     
 //    getRow(row,sudoku,8);
     
-    
+    free(row);
+    */
 
-    //    ===========================================================================
+//    ===========================================================================
 //  Testing getColumn
-    
+    /*
     int* column = malloc(sizeof(int)*MAX_NUM);
     if(column == NULL){
         printf("There was a problem creating the row. GoodBye.");
         exit;       
     }
     
-    getColumn(column,sudoku,8);
-    printLine(column);
+//    getColumn(column,sudoku,8);
+//    printLine(column);
+    
+    free(column);
+*/
+//    ===========================================================================
+//  Testing shuffleSudoku
+    
+//    shuffleSudoku(sudoku);
+    
+//    printSudoku(sudoku);
+    
+//    createSudoku(sudoku);
 
+//    ===========================================================================
+    
+    printf("Is a correct Sudoku ? %s",correctSudoku(sudoku)?"YES":"NO");
+    
     return (0);
 }
 
@@ -124,6 +175,7 @@ void printSudoku(int *sudoku[]){
     
     // This loop iterates though the rows
     // i defines the row number
+    printf("\n");
     for(int i = 0; i < MAX_NUM + 4; i++){
         
         if(i%4==0){
@@ -145,25 +197,22 @@ void printSudoku(int *sudoku[]){
     }
 }
 
-void shuffle(int* ptr, int length){
+void shuffle(int* ptr){
     
 /*
  * Given a array, shuffle the elements. 
-*/
-    
-    // takes the seed from the clock.
-    srand((unsigned int)(time(NULL)));
+*/  
     int pos;
     int temp;
-    for(int i = 0; i < length; i++){
-        pos = rand()% length;
+    for(int i = 0; i < MAX_NUM; i++){
+        pos = rand()% MAX_NUM;
         temp = ptr[pos];
         ptr[pos] = ptr[i];
         ptr[i] = temp;
     }
 }
 
-int hasUniqueNumbers(int* ptr, int lenght){
+int hasUniqueNumbers(int* ptr){
 /*
  * Given a array, verify if it has unique elements.
  * Return 1 if is unique 0 if not.  
@@ -210,4 +259,103 @@ void printLine(int* line){
     for(int i = 0; i< MAX_NUM; i++){
         printf("%d ",line[i]);
     }
+}
+
+void shuffleSudoku(int** sudoku){
+    for(int i = 0; i< MAX_NUM ; i++ ){
+        shuffle(sudoku[i]);
+    }
+}
+
+void createSudoku(int** sudoku){
+    int correctSudoku = 1;
+    int iterations = 0;
+    
+    int* row = malloc(sizeof(int)*MAX_NUM);
+    if(row == NULL){
+        printf("There was a problem creating the row. GoodBye.");
+        exit;       
+    }
+    
+    int* column = malloc(sizeof(int)*MAX_NUM);
+    if(column == NULL){
+        printf("There was a problem creating the row. GoodBye.");
+        exit;       
+    }
+    
+    while(correctSudoku){
+        printf("%d\n", iterations);
+        shuffleSudoku(sudoku);
+        for(int i = 0; i < MAX_NUM; i++){
+            getRow(row, sudoku, i);
+            if(hasUniqueNumbers(row)){
+                correctSudoku = 0;
+            } else {
+                correctSudoku = 1;
+                break;
+            }
+        }
+        
+        for(int i = 0; i < MAX_NUM; i++){
+            getColumn(column, sudoku, i);
+            if(hasUniqueNumbers(column)){
+                correctSudoku = 0;
+            } else {
+                correctSudoku = 1;
+                break;
+            }
+        }
+        iterations++;
+    }
+    
+    printSudoku(sudoku);
+    free(row);
+    free(column);
+} 
+
+int correctSudoku(int** sudoku){
+    int result = 1;
+    
+    int* row = malloc(sizeof(int)*MAX_NUM);
+    if(row == NULL){
+        printf("There was a problem creating the row. GoodBye.");
+        exit;       
+    }
+    
+    int* column = malloc(sizeof(int)*MAX_NUM);
+    if(column == NULL){
+        printf("There was a problem creating the row. GoodBye.");
+        exit;       
+    }
+    
+    // First lets check if the zones are correct
+    for(int i =0; i < MAX_NUM; i++){
+        if(!hasUniqueNumbers(sudoku[i])){
+            result = 0;
+            break;
+        }
+    }
+    
+    // Now lets check the rows:
+    for(int i =0; i < MAX_NUM; i++){
+        getRow(row, sudoku, i);
+        if(!hasUniqueNumbers(row)){
+            result = 0;
+            break;
+        }
+    }
+    
+    // finally lets check the columns:
+    for(int i =0; i < MAX_NUM; i++){
+        getColumn(column, sudoku, i);
+        if(!hasUniqueNumbers(column)){
+            result = 0;
+            break;
+        }
+    }
+    
+    free(row);
+    free(column);
+    
+    return result;
 }
