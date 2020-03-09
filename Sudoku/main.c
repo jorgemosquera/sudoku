@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 #define MAX_NUM 9
 void printLine(int* line);
@@ -21,10 +22,12 @@ void shuffleSudoku(int** sudoku);
 void createSudoku(int** sudoku);
 void createSudoku2(int** sudoku);
 int correctSudoku(int** sudoku);
-void checkNumbersAvailable(int* line, int** sudoku, int zone);
+void checkAvailableNumbersByZone(int* line, int** sudoku, int zone);
 int quantityNumbersAvailable(int* line);
 void printAvailableNumbers(int** sudoku, int zone);
 int pickAvailableNumber(int** sudoku, int zone);
+void checkAvailableNumbersByRow(int* line, int** sudoku, int row);
+void checkAvailableNumbersByColumn(int* line, int** sudoku, int column);
 
 
 /*
@@ -118,6 +121,14 @@ int main() {
     sudoku[7] = zone8;
     sudoku[8] = zone9;
     
+//    ===========================================================================
+//  Testing checkAvailable Numbers by Row
+    
+    int temp1[MAX_NUM] ={0};
+    printSudoku(goodSudoku);
+    checkAvailableNumbersByColumn(temp1,goodSudoku,8);
+    printLine(temp1);
+    
 // Testing available numbers of a sudoku:
     
 //    printAvailableNumbers(sudoku, 0);
@@ -179,7 +190,7 @@ int main() {
     
 // ==========================================================
     
-    createSudoku2(newSudoku);
+//    createSudoku2(newSudoku);
     
     
         
@@ -294,7 +305,8 @@ void getRow(int* row, int** sudoku, int rowNumber){
     // i controls the position of the result row
     for(int i = 0; i < MAX_NUM; i++){
         row[i] = sudoku[i/3+ shiftZone][i%3+ shiftIndex];
-    }    
+    }   
+//    printLine(row);
 }
 
 /*
@@ -409,12 +421,44 @@ int correctSudoku(int** sudoku){
  * Given a array, return a list with the available numbers.
  * Return 0 if is available 1 if not.  
 */
-void checkNumbersAvailable(int* line, int** sudoku, int zone){
+void checkAvailableNumbersByZone(int* line, int** sudoku, int zone){
 
     for (int i = 0; i < MAX_NUM; i++){
         // In order to allow for null values. 0 will be skipped.
         if(sudoku[zone][i]!=0){
             line[sudoku[zone][i]-1]++;
+        }
+    }
+}
+
+/*
+ * Given a array, return a list with the available numbers.
+ * Return 0 if is available 1 if not.  
+*/
+void checkAvailableNumbersByRow(int* line, int** sudoku, int rowNumber){
+    
+    int rowTemp[MAX_NUM] = {0};    
+    getRow(rowTemp, sudoku, rowNumber);
+    printLine(rowTemp);
+    
+    for (int i = 0; i < MAX_NUM; i++){
+        // In order to allow for null values. 0 will be skipped.
+        if(rowTemp[i]!=0){
+            line[rowTemp[i]-1]++;
+        }
+    }
+    printLine(line);
+}
+
+void checkAvailableNumbersByColumn(int* line, int** sudoku, int columnNumber){
+    
+    int column[MAX_NUM] = {0};
+    getColumn(column, sudoku, columnNumber);
+    
+    for (int i = 0; i < MAX_NUM; i++){
+        // In order to allow for null values. 0 will be skipped.
+        if(column[i]!=0){
+            line[column[i]-1]++;
         }
     }
 }
@@ -438,7 +482,7 @@ void printAvailableNumbers(int** sudoku, int zone){
         exit;       
     }
     
-    checkNumbersAvailable(tempLine, sudoku, zone);
+    checkAvailableNumbersByZone(tempLine, sudoku, zone);
     
     for(int i = 0; i < MAX_NUM; i++){
         if(tempLine[i]!=1){
@@ -454,7 +498,7 @@ int pickAvailableNumber(int** sudoku, int zone){
     int pos = 0;
     int tempLine[MAX_NUM] = {0};
     
-    checkNumbersAvailable(tempLine, sudoku, zone);
+    checkAvailableNumbersByZone(tempLine, sudoku, zone);
     printLine(tempLine);
     int quantity = quantityNumbersAvailable(tempLine);
    
