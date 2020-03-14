@@ -58,7 +58,13 @@ void printSudoku(int **sudoku){
                     printf("| ");
                 }
                 else {
-                    printf("%d ",sudoku[(j/4)+shiftZones][(j%4)-1 + shiftIndex]);
+                    int value = sudoku[(j/4)+shiftZones][(j%4)-1 + shiftIndex];
+                    if(value){
+                        printf("%d ",value);
+                    } else {
+                        printf("  ");
+                    }
+                    
                 }
             }
             printf("\n");
@@ -280,8 +286,6 @@ void checkAvailableNumbers(int* line, int** sudoku, int rowNumber, int columnNum
     int row[MAX_NUM] = {0};
     int zone[MAX_NUM] = {0};
     
-    int result[MAX_NUM] = {0};
-    
     int zoneNumber = (rowNumber/3)*3 + columnNumber/3;
     
     checkAvailableNumbersByColumn(column, sudoku, columnNumber);
@@ -295,12 +299,13 @@ void checkAvailableNumbers(int* line, int** sudoku, int rowNumber, int columnNum
     printf("\nZone:");
     printLine(zone);
     
-//    result = column & row;
-//    result = result & zone;
+    for(int i = 0; i < MAX_NUM; i ++) {
+        line[i] = column[i] | row[i];
+        line[i] = line[i] | zone[i];
+    }
     
-    
-    
-    
+    printf("\nResult:");
+    printLine(line);    
 }
 
 int quantityNumbersAvailable(int* temp){
