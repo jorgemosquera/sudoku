@@ -10,6 +10,7 @@
 #include <time.h>
 #include <string.h>
 #include "functions.h"
+#include "arrayList.h"
 
 #define MAX_NUM 9
 
@@ -196,12 +197,12 @@ int main() {
     
 // ==========================================================
     
-//    createSudoku2(newSudoku);
+    createSudoku3(newSudoku);
     
-    printSudoku(unsolvedSudoku);
-    
-    int line[MAX_NUM] = {0};
-    checkAvailableNumbers(line, unsolvedSudoku,0,0);
+//    printSudoku(unsolvedSudoku);
+//    
+//    int line[MAX_NUM] = {0};
+//    checkAvailableNumbers(line, unsolvedSudoku,0,0);
     
     return (0);
 }

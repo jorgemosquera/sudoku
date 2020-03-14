@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /* 
  * File:   functions.h
  * Author: j_a_m
@@ -28,11 +22,12 @@ void getColumn(int* columnResult, int** sudoku, int columnNumber);
 void shuffleSudoku(int** sudoku);
 void createSudoku(int** sudoku);
 void createSudoku2(int** sudoku);
+void createSudoku3(int** sudoku);
 int correctSudoku(int** sudoku);
 void checkAvailableNumbersByZone(int* line, int** sudoku, int zone);
 int quantityNumbersAvailable(int* line);
 void printAvailableNumbers(int** sudoku, int zone);
-int pickAvailableNumber(int** sudoku, int zone);
+int pickAvailableNumber(int** sudoku, int rowNumber, int columnNumber);
 void checkAvailableNumbersByRow(int* line, int** sudoku, int row);
 void checkAvailableNumbersByColumn(int* line, int** sudoku, int column);
 void checkAvailableNumbers(int* line, int** sudoku, int rowNumber, int columnNumber);
