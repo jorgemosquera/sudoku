@@ -21,8 +21,6 @@ void getColumn(int* columnResult, int** sudoku, int columnNumber);
 
 void shuffleSudoku(int** sudoku);
 void createSudoku(int** sudoku);
-void createSudoku2(int** sudoku);
-void createSudoku3(int** sudoku);
 int correctSudoku(int** sudoku);
 void checkAvailableNumbersByZone(int* line, int** sudoku, int zone);
 int quantityNumbersAvailable(int* line);
@@ -32,13 +30,9 @@ void checkAvailableNumbersByRow(int* line, int** sudoku, int row);
 void checkAvailableNumbersByColumn(int* line, int** sudoku, int column);
 void checkAvailableNumbers(int* line, int** sudoku, int rowNumber, int columnNumber);
 
-void createFirstRow(int** sudoku);
-void createSecondRow(int** sudoku);
-void createFirstZone(int** sudoku);
-void createSecondZone(int** sudoku);
-void createThirdZone(int** sudoku);
-int createByZone(int** sudoku);
-
 void clearRow(int** sudoku, int row);
+int createRow(int** sudoku, int rowNumber);
+int createByRow(int** sudoku, int rowNumber);
+void resetSudoku(int** sudoku);
 #endif
 

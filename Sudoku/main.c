@@ -197,7 +197,7 @@ int main() {
     
 // ==========================================================
     
-    createSudoku3(newSudoku);
+    createSudoku(newSudoku);
     
 //    printSudoku(unsolvedSudoku);
 //    

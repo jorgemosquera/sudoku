@@ -155,51 +155,7 @@ void shuffleSudoku(int** sudoku){
     }
 }
 
-void createSudoku(int** sudoku){
-    int correctSudoku = 1;
-    int iterations = 0;
-    
-    int* row = malloc(sizeof(int)*MAX_NUM);
-    if(row == NULL){
-        printf("There was a problem creating the row. GoodBye.");
-        exit;       
-    }
-    
-    int* column = malloc(sizeof(int)*MAX_NUM);
-    if(column == NULL){
-        printf("There was a problem creating the row. GoodBye.");
-        exit;       
-    }
-    
-    while(correctSudoku){
-        printf("%d\n", iterations);
-        shuffleSudoku(sudoku);
-        for(int i = 0; i < MAX_NUM; i++){
-            getRow(row, sudoku, i);
-            if(hasUniqueNumbers(row)){
-                correctSudoku = 0;
-            } else {
-                correctSudoku = 1;
-                break;
-            }
-        }
-        
-        for(int i = 0; i < MAX_NUM; i++){
-            getColumn(column, sudoku, i);
-            if(hasUniqueNumbers(column)){
-                correctSudoku = 0;
-            } else {
-                correctSudoku = 1;
-                break;
-            }
-        }
-        iterations++;
-    }
-    
-    printSudoku(sudoku);
-    free(row);
-    free(column);
-} 
+
 
 int correctSudoku(int** sudoku){
     int result = 1;
@@ -292,21 +248,12 @@ void checkAvailableNumbers(int* line, int** sudoku, int rowNumber, int columnNum
     checkAvailableNumbersByColumn(column, sudoku, columnNumber);
     checkAvailableNumbersByRow(row, sudoku, rowNumber);
     checkAvailableNumbersByZone(zone, sudoku, zoneNumber);
-    
-//    printf("\nRow:");
-//    printLine(row);
-//    printf("\nColumn:");
-//    printLine(column);
-//    printf("\nZone:");
-//    printLine(zone);
-    
+     
     for(int i = 0; i < MAX_NUM; i ++) {
         line[i] = column[i] | row[i];
         line[i] = line[i] | zone[i];
     }
-    
-//    printf("\nResult:");
-//    printLine(line);    
+   
 }
 
 int quantityNumbersAvailable(int* temp){
@@ -365,64 +312,31 @@ int pickAvailableNumber(int** sudoku, int rowNumber, int columnNumber){
     return pos;
 }
 
-void createSudoku2(int** sudoku){
-    int zone;
-    int index;
-    for (int i = 0; i < MAX_NUM; i++){ // rows
-        for (int j = 0; j < MAX_NUM; j++){ // columns
-            zone = (i/3)*3 + j/3;
-            index = (i%3)*3 + j%3;
-//            printf("%d %d\n",zone,index);
 
-            do {
-                sudoku[zone][index] = pickAvailableNumber(sudoku,i,j);
-            }
-            while(!correctSudoku(sudoku));
-            
-            printSudoku(sudoku);
-        }   
-    }
-}
 
-void createSudoku3(int** sudoku) {
-    createFirstRow(sudoku);
-    createSecondRow(sudoku);
-
-    printSudoku(sudoku);
+void createSudoku(int** sudoku) {
     
-    
-    
-   
-    
-    
-
-    
-//    // Finish second row
-//    for (int i = 0; i < MAX_NUM - 3; i++) {
-//        getRow(row2, sudoku, 1);
-//        printLine(row2);
-//        do {
-//            randomSlot = rand() % (MAX_NUM);
-//        } while (row2[randomSlot]);
-//        printf("\nThe selected slot is: %d",randomSlot);
-//        row = 1;
-//        column = randomSlot;
-//        zone = (row / 3)*3 + column / 3;
-//        index = (row % 3)*3 + column % 3;
-//        do {
-//            sudoku[zone][index] = pickAvailableNumber(sudoku, row, column);
-//        } while (!correctSudoku(sudoku));
-//        printSudoku(sudoku);
-//    }
-    
-    
-    
-}
-
-void createFirstRow(int** sudoku){
-    int zone;
-    int index;
     int row = 0;
+    while (row < MAX_NUM){
+        if(createByRow(sudoku, row)){
+            resetSudoku(sudoku);
+            row = 0;
+        }
+        else {
+            row++;
+        }
+    }
+    printSudoku(sudoku);
+       
+    
+}
+
+
+
+int createRow(int** sudoku, int rowNumber){
+    int zone;
+    int index;
+    int row = rowNumber;
     int column = 0;
 
     // create firstRow row= 0
@@ -430,300 +344,48 @@ void createFirstRow(int** sudoku){
         zone = (row / 3)*3 + column / 3;
         index = (row % 3)*3 + column % 3;
         do {
-            sudoku[zone][index] = pickAvailableNumber(sudoku, row, column);
+            int selectedValue = pickAvailableNumber(sudoku, row, column);
+            if(selectedValue == 0){
+                return 1;
+            } else {
+                sudoku[zone][index] = selectedValue;
+            }
+            
         } while (!correctSudoku(sudoku));
 //        printSudoku(sudoku);
-    }
-}
-
-void createSecondRow(int** sudoku){
-//    createFirstZone(sudoku);
-//    createSecondZone(sudoku);
-//    createThirdZone(sudoku);
-    while(createByZone(sudoku)){
-        clearRow(sudoku, 1);
-    }
-}
-
-void createFirstZone(int** sudoku){
-    printf("\nBeginning First Zone.");
-    int zone;
-    int index;
-    int row = 0;
-    int column = 0;
-    
-    //create secondRow row = 1
-    //take zone 2 numbers
-    
-    numbers_t* zoneNumbers = createList();
-    for(int i = 0; i < MAX_NUM/3 ; i++){
-        appendNumber(&zoneNumbers,sudoku[2][i]);
-    }
-    displayList(zoneNumbers);
-    
-    // get row 2 empty slots
-    int row2[MAX_NUM];
-    getRow(row2, sudoku, 1);
-    printf("\nThe values of the line are:");
-    printLine(row2);
-
-    numbers_t* emptySlots = createList();
-    
-    int counter = 0;
-    int i = 0;
-    while(counter < 6){
-        if(row2[i]==0){
-            appendNumber(&emptySlots, i);
-        }
-        i++;
-        counter++; 
-    }
-    printf("\nThe empty slots are:");
-    displayList(emptySlots);
-
-    int randomSlot = 0;
-    
-    while(length(zoneNumbers)){
-        //pick a random slot from zone1Numbers
-        randomSlot = rand()%(length(emptySlots));
-        printf("\nThe random Slot selected is %d", randomSlot);
-        row = 1;
-        column = getValue(emptySlots, randomSlot);
-        printf("\nThe value selected is %d", column);
-        zone = (row / 3)*3 + column / 3;
-        index = (row % 3)*3 + column % 3;
-        int selectedValue = 0;
-        do {
-            selectedValue = pickNumberFromList(&zoneNumbers);
-            sudoku[zone][index] = selectedValue;
-        } while (!correctSudoku(sudoku));
-        
-        removeByValue(&zoneNumbers, selectedValue);
-        displayList(zoneNumbers);
-        removeByIndex(&emptySlots, randomSlot);
-        displayList(emptySlots);
-        printSudoku(sudoku);
-    }
-}
-
-void createSecondZone(int** sudoku){
-    printf("\nBeginning Second Zone.");
-    int zone;
-    int index;
-    int row = 0;
-    int column = 0;
-    
-    //take zone 1 numbers
-    numbers_t* zone1Numbers = createList();
-    for (int i = 0; i < MAX_NUM / 3; i++) {
-        appendNumber(&zone1Numbers, sudoku[1][i]);
-    }
-    printf("\nZone 1 numbers are:");
-    displayList(zone1Numbers);
-    
-    // get row 2 empty slots
-    int row2[MAX_NUM];
-    getRow(row2, sudoku, 1);
-    printf("\nThe values of the line are:");
-    printLine(row2);
-    
-    numbers_t* emptySlots = createList();
-    
-    int counter = 0;
-    int i = 0;
-    while(counter < 6){
-        if(row2[i]==0){
-            appendNumber(&emptySlots, i);
-                               
-        }
-        if(i==2){
-            i = 6;
-        }
-        else {
-            i++;
-        }
-        counter++; 
-    }
-    printf("\nThe empty slots are:");
-    displayList(emptySlots);
-    
-    int randomSlot = 0;
-    
-    while(length(zone1Numbers)){
-        //pick a random slot from zone1Numbers
-        randomSlot = rand()%(length(emptySlots));
-        printf("\nThe random Slot selected is %d", randomSlot);
-        row = 1;
-        column = getValue(emptySlots, randomSlot);
-        printf("\nThe value selected is %d", column);
-        zone = (row / 3)*3 + column / 3;
-        index = (row % 3)*3 + column % 3;
-        int selectedValue = 0;
-        do {
-            selectedValue = pickNumberFromList(&zone1Numbers);
-            sudoku[zone][index] = selectedValue;
-        } while (!correctSudoku(sudoku));
-        
-        removeByValue(&zone1Numbers, selectedValue);
-        displayList(zone1Numbers);
-        removeByIndex(&emptySlots, randomSlot);
-        displayList(emptySlots);
-        printSudoku(sudoku);
-    }
-}
-
-void createThirdZone(int** sudoku){
-    
-    printf("\nBeginning Third Zone.");
-    int zone;
-    int index;
-    int row = 0;
-    int column = 0;
-    
-    //take zone 0 numbers
-    numbers_t* zoneNumbers = createList();
-    for (int i = 0; i < MAX_NUM / 3; i++) {
-        appendNumber(&zoneNumbers, sudoku[0][i]);
-    }
-    
-    printf("\nZone 0 numbers are:");
-    displayList(zoneNumbers);
-    
-    // get row 1 empty slots
-    int row2[MAX_NUM];
-    getRow(row2, sudoku, 1);
-    printf("\nThe values of the line are:");
-    printLine(row2);
-    
-    numbers_t* emptySlots = createList();
-    
-    int counter = 0;
-    int i = 3;
-    while (counter < 6) {
-        if (row2[i] == 0) {
-            appendNumber(&emptySlots, i);
-        }
-        i++;
-        counter++;
-    }
-    printf("\nThe empty slots are:");
-    displayList(emptySlots);
-    
-    int randomSlot = 0;
-    
-    while(length(zoneNumbers)){
-        //pick a random slot from zoneNumbers
-        randomSlot = rand()%(length(emptySlots));
-        printf("\nThe random Slot selected is %d", randomSlot);
-        row = 1;
-        column = getValue(emptySlots, randomSlot);
-        printf("\nThe value selected is %d", column);
-        zone = (row / 3)*3 + column / 3;
-        index = (row % 3)*3 + column % 3;
-        int selectedValue = 0;
-        do {
-            selectedValue = pickNumberFromList(&zoneNumbers);
-            sudoku[zone][index] = selectedValue;
-        } while (!correctSudoku(sudoku));
-        
-        removeByValue(&zoneNumbers, selectedValue);
-        displayList(zoneNumbers);
-        removeByIndex(&emptySlots, randomSlot);
-        displayList(emptySlots);
-        printSudoku(sudoku);
-        
-    }
-}
-
-int createByZone(int** sudoku) {
-    
-
-    for (int x = 0; x < 3; x++) {
-
-        int zone;
-        int index;
-        int rowNumber = 0;
-        int columnNumber = 0;
-
-        //take zone 1 numbers
-        numbers_t* zoneNumbers = createList();
-        for (int i = 0; i < MAX_NUM / 3; i++) {
-            appendNumber(&zoneNumbers, sudoku[2 - x][i]);
-        }
-//        printf("\nZone %d contains the following numbers: ", x);
-//        displayList(zoneNumbers);
-
-        // get row 1 empty slots
-        int row[MAX_NUM];
-        getRow(row, sudoku, 1);
-//        printLine(row);
-        numbers_t* emptySlots = createList();
-        int counter = 0;
-        int y = 0;
-        if (x == 2) {
-            y = 3;
-        }
-        while (counter < 6) {
-            if (row[y] == 0) {
-                appendNumber(&emptySlots, y);
-            }
-            if ((x == 1) && (y == 2)) {
-                y = 6;
-            } else {
-                y++;
-            }
-            counter++;
-        }
-        
-//        printf("\nThe empty slots for %d are: ", x);
-//        displayList(emptySlots);
-
-        int randomSlot = 0;
-
-        while (length(zoneNumbers)) {
-            if(length(emptySlots) == 0){
-                return 1;
-            }
-            //pick a random slot from zone1Numbers
-            randomSlot = rand() % (length(emptySlots));
-//            printf("\nThe random Slot selected is %d", randomSlot);
-            rowNumber = 1;
-            columnNumber = getValue(emptySlots, randomSlot);
-//            printf("\nThe position of the random Slot is selected is %d", columnNumber);
-            zone = (rowNumber / 3)*3 + columnNumber / 3;
-            index = (rowNumber % 3)*3 + columnNumber % 3;
-            int selectedValue = 0;
-            int exitCounter = 0;
-            do {
-                if(exitCounter == 3){
-                    return 1;
-                }
-                selectedValue = pickNumberFromList(&zoneNumbers);
-//                printf("\nThe selected value is: %d", selectedValue);
-                sudoku[zone][index] = selectedValue;
-                
-//                printf("\nexit counter %d", exitCounter);
-                exitCounter++;
-            } while (!correctSudoku(sudoku));
-
-            removeByValue(&zoneNumbers, selectedValue);
-//            displayList(zoneNumbers);
-            removeByIndex(&emptySlots, randomSlot);
-//            displayList(emptySlots);
-//            printSudoku(sudoku);
-        }
-
     }
     
     return 0;
 }
 
+int createByRow(int** sudoku, int rowNumber){
+
+    int clearNumber = 0;
+    while(createRow(sudoku, rowNumber)){
+        if(clearNumber == 5){
+            return 1;
+        }
+        clearRow(sudoku, rowNumber);
+        clearNumber++;
+    }
+    return 0;
+}
+
 void clearRow(int** sudoku, int rowNumber){
-    printf("\nCLearing row and starting again");
+//    printf("\nCLearing row and starting again");
     int shiftZone = (rowNumber/3)*3;
     int shiftIndex =  3*(rowNumber%3);
     // i controls the position of the result row
     for(int i = 0; i < MAX_NUM; i++){
         sudoku[i/3+ shiftZone][i%3+ shiftIndex] = 0;;
     }   
+}
+
+void resetSudoku(int** sudoku){
+//    printf("\nSudoku Reset");
+    for(int i = 0; i < MAX_NUM; i ++){
+        for(int j = 0; j<MAX_NUM; j++){
+            sudoku[i][j] = 0;
+        }
+    }
 }
