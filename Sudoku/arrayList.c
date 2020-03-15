@@ -38,7 +38,7 @@ void appendNumber(numbers_t** head, int number){
 
 void displayList(numbers_t* head){
     numbers_t* current = head;
-    printf("\nThe list contains: ");
+    printf("\n");
     while(current != NULL){
         printf("%d ",current->value);
         current = current->next;

@@ -32,5 +32,13 @@ void checkAvailableNumbersByRow(int* line, int** sudoku, int row);
 void checkAvailableNumbersByColumn(int* line, int** sudoku, int column);
 void checkAvailableNumbers(int* line, int** sudoku, int rowNumber, int columnNumber);
 
+void createFirstRow(int** sudoku);
+void createSecondRow(int** sudoku);
+void createFirstZone(int** sudoku);
+void createSecondZone(int** sudoku);
+void createThirdZone(int** sudoku);
+int createByZone(int** sudoku);
+
+void clearRow(int** sudoku, int row);
 #endif
 
