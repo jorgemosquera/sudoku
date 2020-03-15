@@ -18,3 +18,19 @@ To create a Sudoko I implemented the following Functions:
 - resetSudoku: erases the sudoku. Use when the current attempt cannot yield a correct sudoku.
 
 and some others.
+
+The application creates a valid sudoku.
+
+<p align="center">
+<img src="/images/sudoku.png" width="300">
+</p>
+
+### Difficulty Level
+
+Now is time to erase numbers to the sudoku according to the difficulty level the user wants to play.
+
+Currently I have to approaches:
+1. Define difficulty according to the quantity of numbers erase.
+2. Define difficulty according to the steps taken by an agent to solve the sudoku.
+
+As I don't have the agent yet, I will implement the first one.  
