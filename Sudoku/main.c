@@ -226,9 +226,9 @@ int main() {
 //    checkAvailableNumbers(line, unsolvedSudoku,0,0);
     
 //    ==========================================================
-    printSudoku(unsolvedSudoku);
-    solveSudoku(unsolvedSudoku);
-    printSudoku(unsolvedSudoku);
+    printSudoku(easySudoku);
+    solveSudoku(easySudoku);
+    printSudoku(easySudoku);
 
     
 

@@ -34,3 +34,15 @@ Currently I have to approaches:
 2. Define difficulty according to the steps taken by an agent to solve the sudoku.
 
 As I don't have the agent yet, I will implement the first one.  
+
+Update:03-23-2020 After some reading and testing, just erasing numbers from a sudoku can cause an unsolvable sudoku. Therefore it is necessary to implement the agent first.
+
+### Agent
+
+1. solveByOnePositionInZone: this is the first method to solve a sudoku.
+Baiscally in a 3x3 block you look the available places to put a missing number. If the number can only by in one position then we can place the number there.
+After testing, this function can solve easy level sudokus.
+
+<p align="center">
+<img src="/images/easySudoku.png" width="300">
+</p>
