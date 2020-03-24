@@ -34,5 +34,12 @@ void clearRow(int** sudoku, int row);
 int createRow(int** sudoku, int rowNumber);
 int createByRow(int** sudoku, int rowNumber);
 void resetSudoku(int** sudoku);
+
+void checkAvailableSlotsByZone(int* line, int** sudoku, int zone);
+int isNumberInLine(int* line, int number);
+void getZonesWithMissingNumbers(int* line, int** sudoku);
+void solveByOnePositionInZone(int** sudoku);
+void solveSudoku(int** sudoku);
+
 #endif
 

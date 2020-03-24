@@ -22,17 +22,38 @@ int main() {
     
     srand((unsigned int)(time(NULL)));
     
+    int* easySudoku[9];
+    int easy1[MAX_NUM] = {0, 3, 0, 7, 5, 0, 0, 0, 6};
+    int easy2[MAX_NUM] = {0, 1, 0, 0, 3, 0, 9, 8, 4};
+    int easy3[MAX_NUM] = {0, 6, 0, 0, 4, 8, 3, 0, 0};
+    int easy4[MAX_NUM] = {0, 0, 3, 9, 1, 2, 0, 0, 4};
+    int easy5[MAX_NUM] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+    int easy6[MAX_NUM] = {8, 0, 0, 6, 7, 4, 5, 0, 0};
+    int easy7[MAX_NUM] = {0, 0, 1, 6, 8, 0, 0, 9, 0};
+    int easy8[MAX_NUM] = {6, 7, 5, 0, 9, 0, 0, 4, 0};
+    int easy9[MAX_NUM] = {2, 0, 0, 0, 1, 5, 0, 3, 0};
+    
+    easySudoku[0] = easy1;
+    easySudoku[1] = easy2;
+    easySudoku[2] = easy3;
+    easySudoku[3] = easy4;
+    easySudoku[4] = easy5;
+    easySudoku[5] = easy6;
+    easySudoku[6] = easy7;
+    easySudoku[7] = easy8;
+    easySudoku[8] = easy9;
+    
     int* unsolvedSudoku[9];
     
-    int yzone1[MAX_NUM] = {0, 9, 0, 0, 0, 0, 3, 0, 2};
-    int yzone2[MAX_NUM] = {0, 0, 3, 1, 0, 0, 0, 0, 6};
-    int yzone3[MAX_NUM] = {6, 0, 0, 2, 0, 0, 0, 9, 8};
-    int yzone4[MAX_NUM] = {0, 0, 0, 0, 0, 4, 5, 1, 9};
-    int yzone5[MAX_NUM] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-    int yzone6[MAX_NUM] = {1, 2, 5, 8, 0, 0, 0, 0, 0};
-    int yzone7[MAX_NUM] = {2, 4, 0, 0, 0, 3, 0, 0, 8};
-    int yzone8[MAX_NUM] = {7, 0, 0, 0, 0, 2, 3, 0, 0};
-    int yzone9[MAX_NUM] = {5, 0, 3, 0, 0, 0, 0, 1, 0};
+    int yzone1[MAX_NUM] = {0, 8, 0, 4, 0, 0, 0, 0, 0};
+    int yzone2[MAX_NUM] = {0, 0, 0, 0, 0, 6, 0, 3, 0};
+    int yzone3[MAX_NUM] = {0, 3, 2, 5, 0, 0, 1, 0, 0};
+    int yzone4[MAX_NUM] = {0, 0, 3, 1, 0, 0, 0, 0, 4};
+    int yzone5[MAX_NUM] = {6, 0, 5, 0, 0, 0, 8, 0, 7};
+    int yzone6[MAX_NUM] = {4, 0, 0, 0, 0, 6, 9, 0, 0};
+    int yzone7[MAX_NUM] = {0, 0, 9, 0, 0, 8, 6, 2, 0};
+    int yzone8[MAX_NUM] = {0, 5, 0, 7, 0, 0, 0, 0, 0};
+    int yzone9[MAX_NUM] = {0, 0, 0, 0, 0, 9, 0, 8, 0};
     
     unsolvedSudoku[0] = yzone1;
     unsolvedSudoku[1] = yzone2;
@@ -197,13 +218,20 @@ int main() {
     
 // ==========================================================
     
-    createSudoku(newSudoku);
+//    createSudoku(newSudoku);
     
 //    printSudoku(unsolvedSudoku);
 //    
 //    int line[MAX_NUM] = {0};
 //    checkAvailableNumbers(line, unsolvedSudoku,0,0);
     
+//    ==========================================================
+    printSudoku(unsolvedSudoku);
+    solveSudoku(unsolvedSudoku);
+    printSudoku(unsolvedSudoku);
+
+    
+
     return (0);
 }
 

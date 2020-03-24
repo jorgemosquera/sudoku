@@ -143,7 +143,7 @@ void getColumn(int* column, int** sudoku, int columnNumber){
 }
 
 void printLine(int* line){
-    printf("\nThe values of the line are:\n");
+    printf("\n");
     for(int i = 0; i< MAX_NUM; i++){
         printf("%d ",line[i]);
     }
@@ -388,4 +388,124 @@ void resetSudoku(int** sudoku){
             sudoku[i][j] = 0;
         }
     }
+}
+
+/*
+ * Given a array, return a list with the available slots.
+ * Return 0 if the slot is available, 1 if it is not available.  
+*/
+void checkAvailableSlotsByZone(int* line, int** sudoku, int zone){
+
+    for (int i = 0; i < MAX_NUM; i++){
+        // In order to allow for null values. 0 will be skipped.
+        if(sudoku[zone][i]!=0){
+            line[i]++;
+        }
+    }
+}
+
+int isNumberInLine(int* line, int number){
+    int result = 0;
+    for(int i = 0; i < MAX_NUM; i++){
+        if (line[i] == number){
+            result = 1;
+            break;
+        }
+    }
+    return result;
+}
+
+// Returns an array with the zones that have missing numbers. 0 zone has a missing number
+// 1 the zone doesn't have missing number.
+void getZonesWithMissingNumbers(int* line, int** sudoku){
+    for(int i = 0; i< MAX_NUM; i++){
+        line[i]=0;
+        for(int j = 0; j < MAX_NUM; j++){
+            if(sudoku[i][j]==0){
+                line[i]++;
+                break;
+            }
+        }
+    }
+}
+
+void solveByOnePositionInZone(int** sudoku) {
+    //    Lets start try to solve a sudoku
+    int continueCheckingZones = 0;
+    int zones[MAX_NUM] = {0};
+    do {
+        getZonesWithMissingNumbers(zones, sudoku);
+        //        printf("\nthe zones with missing numbers:");
+        //        printLine(zones);
+
+        continueCheckingZones = 0;
+        for (int zone = 0; zone < MAX_NUM; zone++) {
+            if (zones[zone]) {
+                // The idea is to loop trough the zones, looking for easy numbers
+                int availableNumbers[MAX_NUM] = {0};
+                int availableSlots[MAX_NUM] = {0};
+
+                // we start looping through the available numbers
+                int number = 0;
+                int continueChecking = 0;
+                do {
+                    // First we check for the available Numbers per zone
+                    checkAvailableNumbersByZone(availableNumbers, sudoku, zone);
+                    continueChecking = 0;
+                    //TODO: just loop trough the available numbers. not all of them/
+                    for (int i = 0; i < MAX_NUM; i++) {
+                        // And we check for the available slots
+                        checkAvailableSlotsByZone(availableSlots, sudoku, zone);
+                        if (!availableNumbers[i]) {
+                            number = i + 1;
+                            int possibleSlots[MAX_NUM] = {0};
+
+                            // and now we start looping though the empty slots
+                            for (int i = 0; i < MAX_NUM; i++) {
+                                if (availableSlots[i]) {
+                                    possibleSlots[i]++;
+                                } else {
+                                    int row[MAX_NUM] = {0};
+                                    int column[MAX_NUM] = {0};
+                                    int rowNumber = i / 3 + (zone / 3)*3;
+                                    int columnNumber = i % 3 + (zone % 3)*3;
+                                    getRow(row, sudoku, rowNumber);
+                                    getColumn(column, sudoku, columnNumber);
+                                    if (isNumberInLine(row, number) || isNumberInLine(column, number)) {
+                                        possibleSlots[i]++;
+                                    }
+                                }
+                            }
+
+                            // we get the list of possibleSlot position for the number in that zone
+                            int index = 0;
+                            // if there is only one possible slot for the number in that zone
+                            if (quantityNumbersAvailable(possibleSlots) == 1) {
+
+                                // we get the index of the slot
+                                for (int i = 0; i < MAX_NUM; i++) {
+                                    if (!possibleSlots[i]) {
+                                        index = i;
+                                        break;
+                                    }
+                                }
+
+                                // and we assign the number to that zone.
+                                sudoku[zone][index] = number;
+                                // if we assign a number we check again.
+                                continueChecking = 1;
+                                continueCheckingZones = 1;
+                            }
+                        }
+
+                    }
+                } while (continueChecking);
+            }
+        }
+    } while (continueCheckingZones);
+}
+
+void solveSudoku(int** sudoku){
+    solveByOnePositionInZone(sudoku);
+    
 }
