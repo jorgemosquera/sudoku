@@ -11,8 +11,11 @@
 #include <string.h>
 #include "functions.h"
 #include "arrayList.h"
+#include "gridFunctions.h"
 
 #define MAX_NUM 9
+
+
 
 
 /*
@@ -42,6 +45,28 @@ int main() {
     easySudoku[6] = easy7;
     easySudoku[7] = easy8;
     easySudoku[8] = easy9;
+       
+    int* intermediateSudoku[9];
+    int intermediate1[MAX_NUM] = {6,0,9,7,1,0,0,5,0};
+    int intermediate2[MAX_NUM] = {0,4,0,5,0,9,0,0,0};
+    int intermediate3[MAX_NUM] = {0,0,1,6,0,0,0,0,0};
+    int intermediate4[MAX_NUM] = {2,0,7,0,0,0,0,6,0};
+    int intermediate5[MAX_NUM] = {0,8,0,0,6,0,9,0,0};
+    int intermediate6[MAX_NUM] = {0,9,0,0,2,4,0,0,8};
+    int intermediate7[MAX_NUM] = {0,0,8,0,0,0,0,0,0};
+    int intermediate8[MAX_NUM] = {0,0,0,4,0,0,0,5,0};
+    int intermediate9[MAX_NUM] = {3,0,0,0,0,7,0,0,0};
+    
+    intermediateSudoku[0] = intermediate1;
+    intermediateSudoku[1] = intermediate2;
+    intermediateSudoku[2] = intermediate3;
+    intermediateSudoku[3] = intermediate4;
+    intermediateSudoku[4] = intermediate5;
+    intermediateSudoku[5] = intermediate6;
+    intermediateSudoku[6] = intermediate7;
+    intermediateSudoku[7] = intermediate8;
+    intermediateSudoku[8] = intermediate9;
+    
     
     int* unsolvedSudoku[9];
     
@@ -149,6 +174,28 @@ int main() {
     sudoku[7] = zone8;
     sudoku[8] = zone9;
     
+    int *sudoku2[9]; 
+    
+    int zone21[MAX_NUM] = {5,0,1,0,9,0,0,0,0};
+    int zone22[MAX_NUM] = {0,0,0,3,0,6,0,9,0};
+    int zone23[MAX_NUM] = {6,0,4,0,5,0,0,0,0};
+    int zone24[MAX_NUM] = {4,0,0,0,0,0,7,0,0};
+    int zone25[MAX_NUM] = {0,0,0,1,0,9,0,0,0};
+    int zone26[MAX_NUM] = {0,0,9,0,0,0,0,0,6};
+    int zone27[MAX_NUM] = {0,0,0,0,8,0,1,0,3};
+    int zone28[MAX_NUM] = {0,2,0,5,0,7,0,0,0};
+    int zone29[MAX_NUM] = {0,0,0,0,6,0,7,0,2};
+    
+    sudoku2[0] = zone21;
+    sudoku2[1] = zone22;
+    sudoku2[2] = zone23;
+    sudoku2[3] = zone24;
+    sudoku2[4] = zone25;
+    sudoku2[5] = zone26;
+    sudoku2[6] = zone27;
+    sudoku2[7] = zone28;
+    sudoku2[8] = zone29;
+    
 //    ===========================================================================
 //  Testing checkAvailable Numbers by Row
     
@@ -226,13 +273,18 @@ int main() {
 //    checkAvailableNumbers(line, unsolvedSudoku,0,0);
     
 //    ==========================================================
-    printSudoku(easySudoku);
-    solveSudoku(easySudoku);
-    printSudoku(easySudoku);
+    printSudoku(intermediateSudoku);
+    solveSudoku(intermediateSudoku);
+    printSudoku(intermediateSudoku);
 
-    
-
+//    int*** grid = createGrid();
+//    printf("Grid created.");
+//    populateGrid(grid, intermediateSudoku);
+//    printLine(grid[5][0]);
+//    getRowFromGrid(grid,0);
     return (0);
 }
+
+
 
 

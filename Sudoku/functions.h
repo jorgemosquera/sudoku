@@ -36,10 +36,18 @@ int createByRow(int** sudoku, int rowNumber);
 void resetSudoku(int** sudoku);
 
 void checkAvailableSlotsByZone(int* line, int** sudoku, int zone);
+void checkAvailableSlotsByRow(int* line, int** sudoku, int row);
+void checkAvailableSlotsByColumn(int* line, int** sudoku, int column);
 int isNumberInLine(int* line, int number);
 void getZonesWithMissingNumbers(int* line, int** sudoku);
 void solveByOnePositionInZone(int** sudoku);
 void solveSudoku(int** sudoku);
+
+int solveRow(int** sudoku, int row, int* checking);
+int solveColumn(int** sudoku, int columnRow, int* checking);
+
+void solveByRow(int** sudoku, int* checking);
+void solveByColumn(int** sudoku, int* checking);
 
 #endif
 

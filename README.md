@@ -40,9 +40,12 @@ Update:03-23-2020 After some reading and testing, just erasing numbers from a su
 ### Agent
 
 1. solveByOnePositionInZone: this is the first method to solve a sudoku.
-Baiscally in a 3x3 block you look the available places to put a missing number. If the number can only by in one position then we can place the number there.
+Basically in a 3x3 block you look the available places to put a missing number. If the number can only by in one position then we can place the number there.
 After testing, this function can solve easy level sudokus.
 
 <p align="center">
 <img src="/images/easySudoku.png" width="300">
 </p>
+
+2. solveByRow, solveByColumn: another easy method to place numbers is to look for missing numbers in a row or a column. Again if a missing number can only by in one position, we put the number there.
+These two functions extend the number of easy sudokus we can solve with the agent.
